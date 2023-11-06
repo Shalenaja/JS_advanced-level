@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task_2</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+    <div id="app">{{ message }}
+        <form name="products">
+            <br>
+            <select name="product" id="product">
+                <option value="Apple iPhone 13">Apple iPhone 13</option>
+                <option value="Samsung Galaxy Z Fold 3">Samsung Galaxy Z Fold 3</option>
+                <option value="Sony PlayStation 5">Sony PlayStation 5</option>
+            </select>
+            <input type="button" @click="productSelection" value="ok">
+        </form>
+        <input class="input-comment" type="text" placeholder="Оставьте отзыв">
+        <button @click="add">Добавить отзыв</button>
+        <h2>Отзывы:</h2>
+        <div class="comments" v-for="item in initialData" :key="item.id">
+            <span class="title"> {{ item.product }}</span>
+            <div v-for="item in item.reviews" :key="item.id">{{ item.text }} - {{item.id}} </div>
+        </div>
+        <div class="error-message"></div>
+        <div class="infoUser"></div>
+    </div>
+    
+    <script>
+        "use strict";
+
+        const App = {
+            data() {
+                return {
+                    countId: 5,
+                    currentProduct: '',
+                    initialData: [
+                        {
+                            product: "Apple iPhone 13",
+                            reviews: [
+                                {
+                                    id: "1",
+                                    text: "Отличный телефон! Батарея держится долго.",
+                                },
+                                {
+                                    id: "2",
+                                    text: "Камера супер, фото выглядят просто потрясающе.",
+                                },
+                            ],
+                        },
+                        {
+                            product: "Samsung Galaxy Z Fold 3",
+                            reviews: [
+                                {
+                                    id: "3",
+                                    text: "Интересный дизайн, но дорогой.",
+                                },
+                            ],
+                        },
+                        {
+                            product: "Sony PlayStation 5",
+                            reviews: [
+                                {
+                                    id: "4",
+                                    text: "Люблю играть на PS5, графика на высоте.",
+                                },
+                            ],
+                        },
+
+                    ]
+                }
+            },
+            methods: {
+                productSelection() {
+                    this.currentProduct = document.getElementById('product').value;
+                    return this.currentProduct;
+                },
+
+                add() {
+                    const input = document.querySelector('.input-comment');
+                    const divError = document.querySelector(".error-message");
+                    const infoUser = document.querySelector(".infoUser");
+
+                    try {
+                        if (input.value.length < 50 || input.value.length > 500) {
+                            throw new Error('Length does not match');
+                        }
+                        for (const item of this.initialData) {
+
+                            if (item.product === this.currentProduct) {
+                                this.countId += 1;
+                                item.reviews.push({ id: this.countId, text: input.value });
+                            }
+                            divError.textContent = '';
+
+                            infoUser.textContent = 'Comment added';
+                        }
+                    } catch (error) {
+                        divError.textContent = error.message;
+                    } finally {
+                        infoUser.textContent = 'Comment added';
+                        setTimeout(() => infoUser.textContent = '', 2000);
+                    }
+                }
+            },
+        }
+        Vue.createApp(App).mount('#app');
+    </script>
+
+    <style type="text/css">
+        .error-message {
+            font-size: 120%;
+            color: red;
+        }
+
+        .title {
+            font-size: 120%;
+            color: blue;
+        }
+    </style>
+</body>
+
+</html>
